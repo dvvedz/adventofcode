@@ -9,9 +9,10 @@ import (
 )
 
 func main() {
-	fco := openFile("calories.txt")
-	pf := parseFile(fco)
-	tcf := totalCaloriesElfs(pf)
+	fc := openFile("calories.txt")
+	pf := parseFile(fc)
+	tcf := totalCaloriesElvs(pf)
+
 	fmt.Println("Elf with most calories, has", elfeMostCalories(tcf), "calories.")
 	fmt.Println("Top 3 elfes combined calories is:", topElvesCalories(tcf, 3))
 	// fmt.Println(pf)
@@ -57,7 +58,7 @@ func sumOfSlice(elfe []int) int {
 	return result
 }
 
-func totalCaloriesElfs(allElfes [][]int) []int {
+func totalCaloriesElvs(allElfes [][]int) []int {
 	var result []int
 	for _, elfe := range allElfes {
 		result = append(result, sumOfSlice(elfe))

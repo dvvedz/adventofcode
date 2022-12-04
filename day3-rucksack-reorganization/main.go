@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 )
 
@@ -19,8 +20,7 @@ func main() {
 	}
 	rucksacks.print()
 
-	fmt.Println()
-	fmt.Println(valuesAdded)
+	rucksacks.getGroup()
 }
 
 func openFile(fn string) *os.File {
@@ -84,35 +84,40 @@ Rucksack compartments:  %v
 	fmt.Printf(s, rs.Value, rs.Length, rs.Compartments)
 }
 
-// func (rs Rucksacks) getGroup() {
-// var values []string
+func (rs Rucksacks) getGroup() {
+	var values []string
 
-// for _, v := range rs {
-// values = append(values, v.Value)
-// }
-// // fmt.Println(values)
+	for _, v := range rs {
+		values = append(values, v.Value)
+	}
 
-// var group [][]string
+	var group [][]string
+	for i := 0; i < len(values); i += 3 {
+		group = append(group, values[i:i+3])
+	}
 
-// for i := 0; i < len(values); i += 3 {
-// group = append(group, values[i:i+3])
-// }
+	for _, v := range group {
+		// compare each char in first slice with second and third slice
+		lstrucksacks := v[1:]
+		items := strings.Split(v[0], "")
 
-// for _, v := range group {
-// fmt.Println(v)
-// vf := strings.Split(v[0], "")
+		fmt.Println("ALL", v)
+		fmt.Println("Lasts", lstrucksacks)
+		fmt.Println("Items", sort.StringSlice(items))
 
-// for _, letter := range vf {
-// for i := 1; i < len(v); i++ {
-// countDup := strings.Count(v[i], letter)
-// if countDup >= 1 {
-// fmt.Println(letter)
-// }
-// }
-// }
-// }
+		for _, lst := range lstrucksacks {
+			fmt.Println(lst)
+			for _, itm := range items {
+				if strings.Contains(lst, itm) {
+					fmt.Println(itm)
+				}
+			}
+		}
 
-// }
+		// split first backback and compare each item with the two other slices
+
+	}
+}
 
 func (rs Rucksack) getDupItem() string {
 	// Compare the slices, find the letter that appears in both slices

@@ -5,19 +5,23 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"sort"
 	"strconv"
 	"strings"
 )
 
 func main() {
-	rec := readCsv("sample_input.txt")
+	rec := readCsv("input.txt")
 	prec := parseCsv(rec)
+	var olc int
+
 	prec.printNice()
 
 	for _, p := range prec {
-		p.isOverlapping()
+		if p.isOverlapping() {
+			olc += 1
+		}
 	}
+	fmt.Println(olc)
 }
 
 func readCsv(file string) [][]string {
@@ -83,16 +87,8 @@ func parseCsv(records [][]string) Pairs {
 type Pairs []AssignedSection
 
 func (pairs Pairs) printNice() {
-	fos := "........."
 	for _, p := range pairs {
-		for _, v := range p.Elves {
-			v = sort.IntSlice(v)
-			for i := v[0]; i <= v[1]; i++ {
-				fos = fos[:i-1] + strconv.Itoa(i) + fos[i:]
-			}
-			fmt.Println(fos, v)
-			fos = "........."
-		}
+		p.printNice()
 		fmt.Println()
 		// debug commment
 		// fmt.Println(p.Elves)
@@ -105,28 +101,43 @@ type AssignedSection struct {
 }
 
 func (as AssignedSection) printNice() {
-	fos := "........."
-	for _, v := range as.Elves {
-		v = sort.IntSlice(v)
-		for i := v[0]; i <= v[1]; i++ {
-			fos = fos[:i-1] + strconv.Itoa(i) + fos[i:]
+	// var fos string
+	// for _, v := range as.Elves {
+	// v = sort.IntSlice(v)
+	// for i := 1; i < 100; i++ {
+	// fos += "."
+	// fos = fos[:i-1] + strconv.Itoa(i) + fos[i:]
+	// }
+	// fmt.Println(fos, v)
+	// fos = "........."
+	// }
+	var fos string
+	var fos2 string
+	for i := 1; i < 100; i++ {
+		if i >= as.Elves["one"][0] && i <= as.Elves["one"][1] {
+			fos += "X"
+		} else {
+			fos += "."
 		}
-		fmt.Println(fos, v)
-		fos = "........."
+		if i >= as.Elves["two"][0] && i <= as.Elves["two"][1] {
+			fos2 += "X"
+		} else {
+			fos2 += "."
+		}
 	}
+	fmt.Println(as.Pair)
+	fmt.Println(fos)
+	fmt.Println(fos2)
 }
 
-func (as AssignedSection) isOverlapping() {
+func (as AssignedSection) isOverlapping() bool {
 	// fmt.Println(as.Elves["one"], as.Elves["two"])
 
 	f := as.Elves["one"]
 	s := as.Elves["two"]
 
-	// if(f[0] <= s[0] && s[0] <= f[1]) return true;
-	// if(s[0] <= f[0] && f[0] <= s[1]) return true;
-	// return false;
-
-	if f[0] <= s[0] && s[0] <= f[1] {
-		as.printNice()
+	if s[0] <= f[0] && f[1] <= s[1] || f[0] <= s[0] && s[1] <= f[1] {
+		return true
 	}
+	return false
 }

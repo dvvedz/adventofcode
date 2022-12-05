@@ -80,11 +80,6 @@ func parseCsv(records [][]string) Pairs {
 	return rs
 }
 
-type AssignedSection struct {
-	Pair  []string
-	Elves map[string][]int
-}
-
 type Pairs []AssignedSection
 
 func (pairs Pairs) printNice() {
@@ -95,15 +90,43 @@ func (pairs Pairs) printNice() {
 			for i := v[0]; i <= v[1]; i++ {
 				fos = fos[:i-1] + strconv.Itoa(i) + fos[i:]
 			}
-			fmt.Println(fos)
+			fmt.Println(fos, v)
 			fos = "........."
 		}
-		// debug commment
 		fmt.Println()
+		// debug commment
 		// fmt.Println(p.Elves)
 	}
 }
 
+type AssignedSection struct {
+	Pair  []string
+	Elves map[string][]int
+}
+
+func (as AssignedSection) printNice() {
+	fos := "........."
+	for _, v := range as.Elves {
+		v = sort.IntSlice(v)
+		for i := v[0]; i <= v[1]; i++ {
+			fos = fos[:i-1] + strconv.Itoa(i) + fos[i:]
+		}
+		fmt.Println(fos, v)
+		fos = "........."
+	}
+}
+
 func (as AssignedSection) isOverlapping() {
-	fmt.Println(as.Elves)
+	// fmt.Println(as.Elves["one"], as.Elves["two"])
+
+	f := as.Elves["one"]
+	s := as.Elves["two"]
+
+	// if(f[0] <= s[0] && s[0] <= f[1]) return true;
+	// if(s[0] <= f[0] && f[0] <= s[1]) return true;
+	// return false;
+
+	if f[0] <= s[0] && s[0] <= f[1] {
+		as.printNice()
+	}
 }

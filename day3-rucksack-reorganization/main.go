@@ -4,23 +4,23 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"sort"
 	"strings"
 )
 
 func main() {
-	f := openFile("sample_input.txt")
+	f := openFile("rucksack.txt")
 	rucksacks := parseFile(f)
 	mapOfItmes := itemPrioList().getMap()
 
 	var valuesAdded int
+	// var groupVal int
 
 	for _, r := range rucksacks {
 		valuesAdded += mapOfItmes[r.getDupItem()]
+		// groupVal += mapOfItmes[r.getGroup().getDupItem()]
 	}
-	rucksacks.print()
-
-	rucksacks.getGroup()
+	fmt.Println(rucksacks.getGroup())
+	//fmt.Println(groupVal)
 }
 
 func openFile(fn string) *os.File {
@@ -84,7 +84,7 @@ Rucksack compartments:  %v
 	fmt.Printf(s, rs.Value, rs.Length, rs.Compartments)
 }
 
-func (rs Rucksacks) getGroup() {
+func (rs Rucksacks) getGroup() Rucksack {
 	var values []string
 
 	for _, v := range rs {
@@ -96,27 +96,34 @@ func (rs Rucksacks) getGroup() {
 		group = append(group, values[i:i+3])
 	}
 
+	var tmpL []string
+	var tmpL2 []string
+
 	for _, v := range group {
 		// compare each char in first slice with second and third slice
 		lstrucksacks := v[1:]
 		items := strings.Split(v[0], "")
 
-		fmt.Println("ALL", v)
-		fmt.Println("Lasts", lstrucksacks)
-		fmt.Println("Items", sort.StringSlice(items))
+		// fmt.Println("ALL", v)
+		// fmt.Println("Lasts", lstrucksacks)
+		// fmt.Println("Items", sort.StringSlice(items))
 
-		for _, lst := range lstrucksacks {
-			fmt.Println(lst)
-			for _, itm := range items {
-				if strings.Contains(lst, itm) {
-					fmt.Println(itm)
-				}
+		for _, itm := range items {
+			if strings.Contains(lstrucksacks[0], itm) {
+				tmpL = append(tmpL, itm)
+			}
+			if strings.Contains(lstrucksacks[1], itm) {
+				tmpL2 = append(tmpL2, itm)
 			}
 		}
-
-		// split first backback and compare each item with the two other slices
-
 	}
+	r := Rucksack{
+		Value:        "",
+		Length:       len(tmpL) + len(tmpL2),
+		Compartments: map[string]string{"first": strings.Join(tmpL, ""), "second": strings.Join(tmpL2, "")},
+	}
+
+	return r
 }
 
 func (rs Rucksack) getDupItem() string {

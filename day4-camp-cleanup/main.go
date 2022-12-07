@@ -14,14 +14,19 @@ func main() {
 	prec := parseCsv(rec)
 	var olc int
 
+	var olc2 int
+
 	prec.printNice()
 
 	for _, p := range prec {
 		if p.isOverlapping() {
 			olc += 1
 		}
+		if p.isPartiallyOverlapping() {
+			olc2 += 1
+		}
 	}
-	fmt.Println(olc)
+	fmt.Println(olc2)
 }
 
 func readCsv(file string) [][]string {
@@ -137,6 +142,17 @@ func (as AssignedSection) isOverlapping() bool {
 	s := as.Elves["two"]
 
 	if s[0] <= f[0] && f[1] <= s[1] || f[0] <= s[0] && s[1] <= f[1] {
+		return true
+	}
+	return false
+}
+
+func (as AssignedSection) isPartiallyOverlapping() bool {
+	// fmt.Println(as.Elves["one"], as.Elves["two"])
+
+	f := as.Elves["one"]
+	s := as.Elves["two"]
+	if s[0] <= f[1] && f[0] <= s[1] {
 		return true
 	}
 	return false

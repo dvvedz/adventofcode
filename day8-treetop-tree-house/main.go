@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -45,26 +46,28 @@ func (ts Trees) pPrint() {
 		sp := strings.Split(t, "")
 		strees = append(strees, sp)
 	}
-	fmt.Println(strees)
+	for _, t := range strees {
+		fmt.Println(t)
+	}
+	var sum int
 	for i, st := range strees {
-
-		// Or just add them to New()
-		// g := color.New(color.FgGreen, color.Bold)
-		// ma := color.New(color.FgMagenta, color.Bold)
-
-		// g.Printf("%s", t[0])
-
-		// mt := t[1 : len(t)-1]
-		// for _, m := range mt {
-		// ma.Printf("%s", m)
-		// }
-
-		// et := t[len(t)-1]
-		// g.Printf("%s\n", et)
-
-		// fmt.Printf("%s\n", st)
 		if i != 0 && i != len(st)-1 {
-			fmt.Println(st[1 : len(st)-1])
+			// midtrees := st[1 : len(st)-1]
+			for j, itm := range st {
+				if j > 0 && j < len(st)-1 {
+					left := st[j-1]
+					right := st[j+1]
+					top := strees[i-1][j]
+					bottom := strees[i+1][j]
+
+					if itm > left || itm > right || itm > top || itm > bottom {
+						fmt.Println(i, itm)
+						t, _ := strconv.Atoi(itm)
+						sum += t
+					}
+				}
+			}
 		}
 	}
+	fmt.Println(sum)
 }
